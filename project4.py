@@ -112,7 +112,7 @@ class BulletSprite(pygame.sprite.Sprite):
         self.rect.center = (x, y-25)
 
     def update(self):
-        x, y = self.rect.centers
+        x, y = self.rect.center
         y -= 20
         self.rect.center = x, y
         if y <= 0:
@@ -197,33 +197,46 @@ class ShipSprite(pygame.sprite.Sprite):
 
     def update(self):
         x, y = self.rect.center
+    
 
-        if not self.autopilot:
-            # Handle movement
-            self.rect.center = x + self.dx, y + self.dy
+        if (x >= 0) and (x <= X_MAX): #{ 
 
-            # Handle firing
-            if self.firing:
-                self.shot = BulletSprite(x, y)
-                self.shot.add(self.groups)
+            if not self.autopilot:
+                # Handle movement
+                self.rect.center = x + self.dx, y + self.dy
 
-            if self.health < 0:
-                self.kill()
-        else:
-            if not self.in_position:
-                if x != X_MAX/2:
-                    x += (abs(X_MAX/2 - x)/(X_MAX/2 - x)) * 2
-                if y != Y_MAX - 100:
-                    y += (abs(Y_MAX - 100 - y)/(Y_MAX - 100 - y)) * 2
+                # Handle firing
+                if self.firing:
+                    self.shot = BulletSprite(x, y)
+                    self.shot.add(self.groups)
 
-                if x == X_MAX/2 and y == Y_MAX - 100:
-                    self.in_position = True
+                if self.health < 0:
+                    self.kill()
             else:
-                y -= self.velocity
-                self.velocity *= 1.5
-                if y <= 0:
-                    y = -30
+                if not self.in_position:
+                    if x >= (x-X_MAX/2):
+                        x += (abs(X_MAX/2 - x)/(X_MAX/2 - x)) * 2
+                    if y != Y_MAX - 100:
+                        y += (abs(Y_MAX - 100 - y)/(Y_MAX - 100 - y)) * 2
+
+                    if x == X_MAX/2 and y == Y_MAX - 100:
+                        self.in_position = True
+                else:
+                    y -= self.velocity
+                    self.velocity *= 1.5
+                    if y <= 0:
+                        y = -30
+                self.rect.center = x, y
+
+        else: #} #{
+            if x < 0:
+                x = 0
+            else:
+                x = X_MAX
             self.rect.center = x, y
+
+        #}
+
 
     def steer(self, direction, operation):
         v = 10
@@ -345,7 +358,7 @@ def main():
                 for i in enemies:
                     i.kill()
             else:
-                touchdown = Touchdown(300,300)
+                touchdown = Touchdown(300,30)
                 screen.blit(touchdown.image, touchdown.rect)
                 if deadtimer:
                     deadtimer -= 1
