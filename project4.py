@@ -51,6 +51,10 @@ class Touchdown(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x_pos, y_pos)
 
+        self.add(groups)
+        self.touchdown_sound = pygame.mixer.Sound("Football_Crowd-GoGo-1730947850.wav")
+        self.touchdown_sound.set_volume(0.4)
+
 
 class Star(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -129,7 +133,7 @@ class EnemySprite(pygame.sprite.Sprite):
         self.velocity = random.randint(2, 6)
 
         self.add(groups)
-        self.explosion_sound = pygame.mixer.Sound("Arcade Explo A.wav")
+        self.explosion_sound = pygame.mixer.Sound("Male Grunt-SoundBible.com-68178715.wav")
         self.explosion_sound.set_volume(0.4)
 
 
